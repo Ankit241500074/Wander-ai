@@ -4,8 +4,10 @@ services:
     name: wander-ai-api
     env: node
     plan: starter
-    buildCommand: npm install && npm run build
-    startCommand: npm start
+    buildCommand: |
+      npm ci --only=production
+      npm run build
+    startCommand: node dist/server/node-build.mjs
     envVars:
       - key: NODE_ENV
         value: production
@@ -19,15 +21,34 @@ services:
         value: 10000
     healthCheckPath: /api/health
     autoDeploy: true
+    nodeVersion: 20
+    buildFilter:
+      paths:
+        - server/**
+        - shared/**
+        - package.json
+        - package-lock.json
+        - tsconfig.json
+        - vite.config.server.ts
 
   # Frontend Static Site
-  - type: web
+  - type: static
     name: wander-ai-frontend
-    env: static
-    plan: starter
-    buildCommand: npm install && npm run build:client
+    buildCommand: |
+      npm ci --only=production
+      npm run build:client
     staticPublishPath: ./dist/spa
     envVars:
       - key: VITE_API_URL
         value: https://wander-ai-api.onrender.com
     autoDeploy: true
+    buildFilter:
+      paths:
+        - client/**
+        - shared/**
+        - package.json
+        - package-lock.json
+        - tsconfig.json
+        - vite.config.ts
+        - tailwind.config.ts
+        - postcss.config.js
