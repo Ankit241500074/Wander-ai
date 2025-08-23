@@ -5,8 +5,8 @@ services:
     env: node
     plan: starter
     buildCommand: |
-      npm ci --only=production
-      npm run build
+      npm install
+      npm run build:production
     startCommand: node dist/server/node-build.mjs
     envVars:
       - key: NODE_ENV
@@ -35,7 +35,7 @@ services:
   - type: static
     name: wander-ai-frontend
     buildCommand: |
-      npm ci --only=production
+      npm install
       npm run build:client
     staticPublishPath: ./dist/spa
     envVars:
