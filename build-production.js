@@ -2,7 +2,7 @@
 
 /**
  * Production build script for Render deployment
- * This script handles the build process without relying on Vite being in dependencies
+ * This script handles the build process without relying on npm scripts
  */
 
 import { execSync } from 'child_process';
@@ -22,13 +22,23 @@ try {
   console.log('📦 Installing dependencies...');
   execSync('npm install', { stdio: 'inherit' });
 
-  // Build client
+  // Build client directly using vite
   console.log('🏗️ Building client...');
-  execSync('npm run build:client', { stdio: 'inherit' });
+  try {
+    execSync('npx vite build', { stdio: 'inherit' });
+  } catch (error) {
+    console.log('⚠️ Direct vite build failed, trying npm script...');
+    execSync('npm run build:client', { stdio: 'inherit' });
+  }
 
-  // Build server
+  // Build server directly using vite
   console.log('🏗️ Building server...');
-  execSync('npm run build:server', { stdio: 'inherit' });
+  try {
+    execSync('npx vite build --config vite.config.server.ts', { stdio: 'inherit' });
+  } catch (error) {
+    console.log('⚠️ Direct vite build failed, trying npm script...');
+    execSync('npm run build:server', { stdio: 'inherit' });
+  }
 
   // Verify build output
   console.log('✅ Verifying build output...');

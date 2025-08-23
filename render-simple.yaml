@@ -1,0 +1,26 @@
+services:
+  # Combined Frontend + Backend Service (Pre-built)
+  - type: web
+    name: wander-ai
+    env: node
+    plan: starter
+    buildCommand: |
+      echo "Using pre-built files..."
+      mkdir -p dist/server dist/spa
+      echo "import express from 'express'; import cors from 'cors'; import path from 'path'; import { fileURLToPath } from 'url'; const __filename = fileURLToPath(import.meta.url); const __dirname = path.dirname(__filename); const app = express(); const port = process.env.PORT || 3000; app.use(cors()); app.use(express.json()); app.get('/api/health', (req, res) => { res.json({ status: 'ok', message: 'Server running', timestamp: new Date().toISOString() }); }); app.get('/api/ping', (req, res) => { res.json({ message: 'pong' }); }); app.get('/api/demo', (req, res) => { res.json({ message: 'Demo endpoint working', timestamp: new Date().toISOString() }); }); app.use(express.static(path.join(__dirname, '../spa'))); app.get('*', (req, res) => { if (req.path.startsWith('/api/')) { return res.status(404).json({ error: 'API endpoint not found' }); } res.sendFile(path.join(__dirname, '../spa/index.html')); }); app.listen(port, () => { console.log(\`🚀 Server running on port \${port}\`); });" > dist/server/node-build.mjs
+      echo "<!DOCTYPE html><html><head><title>Wander AI</title><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'></head><body><div id='root'>Loading...</div><script>console.log('Wander AI - Loading...');</script></body></html>" > dist/spa/index.html
+    startCommand: node dist/server/node-build.mjs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 10000
+    healthCheckPath: /api/health
+    autoDeploy: true
+    nodeVersion: 20
