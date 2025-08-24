@@ -13,8 +13,8 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "vite build",
-    "build:server": "vite build --config vite.config.server.ts",
+    "build:client": "npx vite build",
+    "build:server": "npx vite build --config vite.config.server.ts",
     "build:production": "node build-production.js",
     "build:simple": "node build-simple.js",
     "build:deploy": "node build-deploy.js",
