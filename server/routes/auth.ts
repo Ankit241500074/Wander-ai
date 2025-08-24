@@ -16,13 +16,13 @@ const users: UserDB[] = [];
 // Helper function to initialize demo users
 const initializeDemoUsers = async () => {
   if (users.length === 0) {
-    const adminPassword = await hashPassword("admin123");
+    const adminPassword = await hashPassword("@Ankit2415");
     const userPassword = await hashPassword("password123");
 
     users.push(
       {
         id: "1",
-        email: "admin@wanderai.com",
+        email: "ankit@wanderai.com",
         name: "Admin User",
         role: "admin",
         password: adminPassword,
